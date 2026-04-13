@@ -30,9 +30,28 @@ const comunicadoTitle = document.querySelector("#comunicado-title");
 const comunicadoContent = document.querySelector("#comunicado-content");
 const comunicadoStatus = document.querySelector("#comunicado-status");
 const comunicadosList = document.querySelector("#comunicados-list");
+const studentWall = document.querySelector("#student-wall");
+const gradeSelector = document.querySelector("#grade-selector");
+const periodSelector = document.querySelector("#period-selector");
+const sessionGrid = document.querySelector("#session-grid");
 
 let currentRole = null;
 let currentEmail = null;
+let selectedGrade = "octavo";
+let selectedPeriod = "1";
+
+const grades = [
+  { key: "octavo", label: "Octavo" },
+  { key: "noveno", label: "Noveno" },
+  { key: "decimo", label: "Decimo" },
+  { key: "undecimo", label: "Undecimo" }
+];
+
+const periods = [
+  { key: "1", label: "Periodo 1" },
+  { key: "2", label: "Periodo 2" },
+  { key: "3", label: "Periodo 3" }
+];
 
 logoutButton.addEventListener("click", async () => {
   await signOut(auth);
@@ -59,6 +78,7 @@ onAuthStateChanged(auth, async (user) => {
   currentRole = role;
   roleElement.textContent = role;
   messageElement.textContent = roleMessage(role);
+  configureStudentWall(role);
   configureComunicadoForm(role);
   listenComunicados();
 });
@@ -116,6 +136,65 @@ function configureComunicadoForm(role) {
 function setComunicadoStatus(message, isError = false) {
   comunicadoStatus.textContent = message;
   comunicadoStatus.style.color = isError ? "#b42318" : "#1d4f91";
+}
+
+function configureStudentWall(role) {
+  if (role !== "estudiante") {
+    studentWall.style.display = "none";
+    return;
+  }
+  studentWall.style.display = "block";
+  renderGradeSelector();
+  renderPeriodSelector();
+  renderSessionGrid();
+}
+
+function renderGradeSelector() {
+  gradeSelector.innerHTML = "";
+  grades.forEach((grade) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `chip-btn${grade.key === selectedGrade ? " active" : ""}`;
+    button.textContent = grade.label;
+    button.addEventListener("click", () => {
+      selectedGrade = grade.key;
+      renderGradeSelector();
+      renderSessionGrid();
+    });
+    gradeSelector.appendChild(button);
+  });
+}
+
+function renderPeriodSelector() {
+  periodSelector.innerHTML = "";
+  periods.forEach((period) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `chip-btn${period.key === selectedPeriod ? " active" : ""}`;
+    button.textContent = period.label;
+    button.addEventListener("click", () => {
+      selectedPeriod = period.key;
+      renderPeriodSelector();
+      renderSessionGrid();
+    });
+    periodSelector.appendChild(button);
+  });
+}
+
+function renderSessionGrid() {
+  sessionGrid.innerHTML = "";
+  for (let session = 1; session <= 12; session += 1) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "session-btn";
+    button.textContent = `Sesion ${session}`;
+    button.addEventListener("click", () => {
+      alert(
+        `Abrir contenido -> Grado: ${selectedGrade}, Periodo: ${selectedPeriod}, Sesion: ${session}`
+      );
+    });
+    sessionGrid.appendChild(button);
+  }
 }
 
 function listenComunicados() {

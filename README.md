@@ -42,6 +42,13 @@ Base inicial del servicio web para la Institucion Educativa Sor Maria Juliana.
 - `estudiante` y `acudiente`: solo lectura de comunicados.
 - `users/{uid}`: cada usuario solo puede leer/escribir su propio perfil.
 
+## Muro inicial de estudiante
+
+- Disponible para rol `estudiante` en `dashboard.html`.
+- Selector de grados: `octavo`, `noveno`, `decimo`, `undecimo`.
+- Cada grado incluye periodos `1`, `2`, `3`.
+- Cada periodo muestra acceso a `12` sesiones.
+
 ## Ejecucion local
 
 Para probar autenticacion con modulos ES, ejecuta con servidor local:
