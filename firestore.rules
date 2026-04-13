@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isAdminOrTeacher() {
+      return isSignedIn() && (userRole() == "admin" || userRole() == "docente");
+    }
+
+    match /users/{userId} {
+      allow read: if isSignedIn() && request.auth.uid == userId;
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow update, delete: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    match /comunicados/{docId} {
+      allow read: if isSignedIn();
+      allow create: if isAdminOrTeacher();
+      allow update, delete: if isAdminOrTeacher();
+    }
+  }
+}
