@@ -313,6 +313,17 @@ h1 {
   cursor: pointer;
 }
 
+.session-content {
+  border-top: 1px solid #e5eaf0;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+}
+
+.session-content p,
+.session-content li {
+  color: #223046;
+}
+
 .comunicados-list {
   display: grid;
   gap: 0.75rem;

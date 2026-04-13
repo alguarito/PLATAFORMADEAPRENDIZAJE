@@ -189,9 +189,12 @@ function renderSessionGrid() {
     button.className = "session-btn";
     button.textContent = `Sesion ${session}`;
     button.addEventListener("click", () => {
-      alert(
-        `Abrir contenido -> Grado: ${selectedGrade}, Periodo: ${selectedPeriod}, Sesion: ${session}`
-      );
+      const params = new URLSearchParams({
+        grade: selectedGrade,
+        period: selectedPeriod,
+        session: String(session)
+      });
+      window.location.href = `./session.html?${params.toString()}`;
     });
     sessionGrid.appendChild(button);
   }
